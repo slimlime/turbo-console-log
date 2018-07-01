@@ -40,7 +40,9 @@ function className(lineCode) {
  * @since 1.0
  */
 function checkIfNamedFunction(lineCode) {
+
   const namedFunctionDeclarationRegex = /[a-zA-Z]+(\s*)\(.*\)(\s*){/
+  getTypeScriptFunctionRegexPattern();
   const nonNamedFunctionDeclaration = /(function)(\s*)\(.*\)(\s*){/
   const namedFunctionExpressionRegex = /[a-zA-Z]+(\s*)=(\s*)(function)?(\s*)[a-zA-Z]*(\s*)\(.*\)(\s*)(=>)?(\s*){/
   const isNamedFunctionDeclaration    = namedFunctionDeclarationRegex.test(lineCode)
@@ -50,21 +52,24 @@ function checkIfNamedFunction(lineCode) {
 }
 
 /**
+ * Returns TypeScript function header Regex
+ * @function
  *
- *
+ * @returns {string}
+ * @author Samuel Lim
  */
 function getTypeScriptFunctionRegexPattern() {
   // e.g. { @example `thisIsMyFunctionIsCoolTyper(superCoolVar: Array<Typo[]>, mittens: Classic[]): boolean {`         }                                       // Not sure if jsdoc plays well here.
   // Regex pattern chunks for TypeScript function headers to fix up VS Code extension.
-  const regexFunctionNameWordFirstBounded = '([\w]{1,200}?)\b';  // Function name
-  const regexParenthesisOpen              = '(\()';              // Open rounded bracket ( for parameters
+  const regexFunctionNameWordFirstBounded = '([\\w]{1,200}?)\\b';  // Function name
+  const regexParenthesisOpen              = '(\\()';               // Open rounded bracket ( for parameters
 
   // Warning, doesn't check if real words or valid syntax, can having trailing characters, spaces etc.
-  const regexVarsAndTypesDefined              = '([\w:,<>\t \[\]]{0,200})';  // Allow types in function header params such as <Array<typo[]>>
-  const regexParameters                       = regexVarsAndTypesDefined;    // also allows the same syntax for types as parameters vars etc.
-  const regexParenthesisClosed                = '(\))';                      // Closed rounded bracket ) for parameters.
-  const regexReturnTypesDefinition            = regexVarsAndTypesDefined;    // also allows the same syntax for types as parameters vars etc.
-  const regexOpeningCurlyBraceForFunctionBody = '({)'                        // the end of the important match to obtain function header.
+  const regexVarsAndTypesDefined              = '([\\w:,<>\\t \\[\\]]{0,200})';  // Allow types in function header params such as <Array<typo[]>>
+  const regexParameters                       = regexVarsAndTypesDefined;        // also allows the same syntax for types as parameters vars etc.
+  const regexParenthesisClosed                = '(\\))';                         // Closed rounded bracket ) for parameters.
+  const regexReturnTypesDefinition            = regexVarsAndTypesDefined;        // also allows the same syntax for types as parameters vars etc.
+  const regexOpeningCurlyBraceForFunctionBody = '({)'                            // the end of the important match to obtain function header.
 
   // Build the TypeScript function header :construction: regex pattern from the parts defined above.
   // e.g. { @example `thisIsMyFunctionIsCoolTyper(superCoolVar: Array<Typo[]>, mittens: Classic[]): boolean {`         }                                       // Not sure if jsdoc plays well here.
@@ -79,9 +84,12 @@ function getTypeScriptFunctionRegexPattern() {
 
   // Used string literals for patterns earlier instead of regex type `regex.+` instead of `/regex.+/`
   // So need to convert to regexp. Whoops. But need to escape more things...
+  // Doubled the backslash on all the symbols so that \\w becomes \w.
+  const regexTSFullFunctionHeaderRegexedFromEscapedStringPatterns = new RegExp(regexTSFullFunctionHeader);
+  console.log('​regexTSFullFunctionHeaderRegexedFromEscapedStringPatterns', regexTSFullFunctionHeaderRegexedFromEscapedStringPatterns);
+  
 
-
-  return regexTSFullFunctionHeader;
+  return regexTSFullFunctionHeaderRegexedFromEscapedStringPatterns;
 }
 /**
  * Return a boolean indicating if the line code represents an if, switch, while or for statement
