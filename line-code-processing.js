@@ -76,7 +76,7 @@ function getTypeScriptFunctionRegexPattern() {
     regexReturnTypesDefinition +                                              // e.g. {@example `: boolean`                                         }
     regexOpeningCurlyBraceForFunctionBody;                                    // e.g. {@example `{`                                                 }
   console.log(regexTSFullFunctionHeader);
-  
+
   // Used string literals for patterns earlier instead of regex type `regex.+` instead of `/regex.+/`
   // So need to convert to regexp. Whoops. But need to escape more things...
 
