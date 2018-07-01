@@ -76,7 +76,7 @@ function enclosingBlockName (document, lineOfSelectedVar, blockType) {
       case 'function':
         if (lineCodeProcessing.checkIfNamedFunction(currentLineText) && !lineCodeProcessing.checkIfJSBuiltInStatement(currentLineText)) {
           if (lineOfSelectedVar >= currentLineNum && lineOfSelectedVar < blockClosingBraceLineNum(document, currentLineNum)) {
-            return `${lineCodeProcessing.functionName(currentLineText)}() -> `
+            return `${lineCodeProcessing.functionName(currentLineText)}-> `
           }
         }
         break
